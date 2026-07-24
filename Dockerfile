@@ -8,7 +8,18 @@ ENV DEBIAN_FRONTEND=noninteractive \
     VNC_GEOMETRY=1920x1080 \
     VNC_DEPTH=24
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Enable Ubuntu Universe repository.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    software-properties-common \
+    ca-certificates \
+    && add-apt-repository -y universe \
+    && apt-get update \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install XFCE and TigerVNC.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     xfce4 \
     xfce4-goodies \
     tigervnc-standalone-server \
@@ -21,7 +32,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     procps \
     curl \
     git \
-    ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -49,7 +59,10 @@ VNC_DEPTH="${VNC_DEPTH:-24}"
 
 mkdir -p /root/.vnc
 
-printf '%s\n' "${VNC_PASSWORD}" | vncpasswd -f > /root/.vnc/passwd
+printf '%s\n' "${VNC_PASSWORD}" \
+    | vncpasswd -f \
+    > /root/.vnc/passwd
+
 chmod 600 /root/.vnc/passwd
 
 vncserver -kill :1 >/dev/null 2>&1 || true
@@ -57,9 +70,10 @@ vncserver -kill :1 >/dev/null 2>&1 || true
 rm -f /tmp/.X1-lock
 rm -f /tmp/.X11-unix/X1
 
-echo "Starting TigerVNC on display :1"
+echo "Starting TigerVNC"
+echo "Display: :1"
 echo "Resolution: ${VNC_GEOMETRY}"
-echo "Container port: 5901"
+echo "Container TCP port: 5901"
 
 exec vncserver :1 \
     -fg \
