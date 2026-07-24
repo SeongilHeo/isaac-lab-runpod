@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/isaac-lab:3.0.0-beta2
+FROM nvcr.io/nvidia/isaac-lab:3.0.0-beta2-post1
 
 USER root
 
