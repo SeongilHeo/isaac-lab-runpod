@@ -2,7 +2,6 @@ name: Build and Push Isaac Lab GUI
 
 on:
   workflow_dispatch:
-
   push:
     branches:
       - main
@@ -13,9 +12,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    permissions:
-      contents: read
 
     steps:
       - name: Free disk space
@@ -36,7 +32,7 @@ jobs:
         uses: docker/login-action@v4
         with:
           registry: nvcr.io
-          username: "$oauthtoken"
+          username: $oauthtoken
           password: ${{ secrets.NGC_API_KEY }}
 
       - name: Log in to Docker Hub
@@ -46,17 +42,18 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@v3
 
       - name: Build and push image
-        uses: docker/build-push-action@v7
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/isaac-lab-gui:3.0.0-beta2
+            ${{ secrets.DOCKERHUB_USERNAME }}/isaac-lab-gui:3.0.0-beta2-post1
             ${{ secrets.DOCKERHUB_USERNAME }}/isaac-lab-gui:latest
           provenance: false
-          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
