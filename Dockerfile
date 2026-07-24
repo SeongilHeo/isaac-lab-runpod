@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/isaac-lab:3.0.0-beta2-post1
+FROM nvcr.io/nvidia/isaac-lab:3.0.0-beta2
 
 ENV DEBIAN_FRONTEND=noninteractive \
     DISPLAY=:1 \
