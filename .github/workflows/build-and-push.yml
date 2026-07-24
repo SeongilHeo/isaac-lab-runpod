@@ -52,7 +52,7 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/isaac-lab-gui:3.0.0-beta2-post1
+            ${{ secrets.DOCKERHUB_USERNAME }}/isaac-lab-gui:2.3.2
             ${{ secrets.DOCKERHUB_USERNAME }}/isaac-lab-gui:latest
           provenance: false
           cache-from: type=gha
